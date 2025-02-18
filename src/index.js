@@ -45,16 +45,25 @@ function renderWeatherData(data) {
         console.log(`Day: ${daysArray[i].datetime}, weather: ${daysArray[i].conditions}`);
         const dayDiv = document.createElement("div");
         dayDiv.className = "day-div";
+
         const dateP = document.createElement("p");
         dateP.textContent = daysArray[i].datetime;
         dayDiv.appendChild(dateP);
+
         const iconFromAPI = daysArray[i].icon;
         const emojiDiv = document.createElement("div");
-        emojiDiv.textContent = weatherIcons[iconFromAPI] ? weatherIcons[iconFromAPI] : "❓";
+        emojiDiv.textContent = weatherIcons[iconFromAPI] ? weatherIcons[iconFromAPI] : "❓"; 
+        /* This checks if the iconFromAPI key exists in the weatherIcons object. 
+        If it does, weatherIcons[iconFromAPI] will return an emoji (e.g., "⛅" for "partly-cloudy-day"). 
+        If it does not exist, it returns undefined, which is a falsy value. If the condition is true (key exists in weatherIcons). 
+        The emoji corresponding to iconFromAPI is assigned to textContent. If the condition is false (key does not exist in weatherIcons). 
+        The fallback value "❓" (question mark emoji) is used instead.*/
         dayDiv.appendChild(emojiDiv);
+
         const weatherP = document.createElement("p");
         weatherP.textContent = daysArray[i].conditions;
         dayDiv.appendChild(weatherP);
+        
         forecastDiv.appendChild(dayDiv);
     }
 }
