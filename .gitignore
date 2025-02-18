@@ -1,0 +1,44 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build artifacts
+dist/
+out/
+*.bundle.js
+*.bundle.js.map
+
+# Webpack cache
+.cache/
+webpack.cache/
+webpack-stats.json
+
+# Temporary files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# Babel
+.babelrc
+
+# ESLint
+.eslintcache
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+*.log
+logs/
+*.log.*
+npm-debug.log
