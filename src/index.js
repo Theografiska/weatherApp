@@ -68,7 +68,6 @@ function renderWeatherData(data) {
     for (let i = 0; i < 5; i++) {
         const unformattedDate = daysArray[i].datetime;
         const formattedDate = format(parseISO(unformattedDate), "MMM dd (eee)");
-        console.log(`Day: ${formattedDate}, weather: ${daysArray[i].conditions}`);
         const dayDiv = document.createElement("div");
         dayDiv.className = "day-div";
 
@@ -82,26 +81,19 @@ function renderWeatherData(data) {
         }
         dayDiv.appendChild(dateH3);
 
-        const tempP = document.createElement("p");
-        let minTemp = convertToCelsius(daysArray[i].tempmin).toFixed(1);
-        let maxTemp = convertToCelsius(daysArray[i].tempmax).toFixed(1);
-        tempP.textContent = `${minTemp} ... ${maxTemp} degrees °C`;
-        dayDiv.appendChild(tempP);
+        const tempParaC = document.createElement("p");
+        tempParaC.className = "cels";
+        let minTempC = convertToCelsius(daysArray[i].tempmin).toFixed(1);
+        let maxTempC = convertToCelsius(daysArray[i].tempmax).toFixed(1);
+        tempParaC.textContent = `${minTempC} ... ${maxTempC} degrees °C`;
+        dayDiv.appendChild(tempParaC);
 
-        function toggleCelsFahr() {
-            if (toggleCelsFahr.textContent === "Show ºF") {
-                minTemp = daysArray[i].tempmin;
-                maxTemp = daysArray[i].tempmax;
-                tempP.textContent = `${minTemp} ... ${maxTemp} degrees °F`;
-                toggleCelsFahr.textContent = "Show °C";
-            } else {
-                minTemp = convertToCelsius(daysArray[i].tempmin).toFixed(1);
-                maxTemp = convertToCelsius(daysArray[i].tempmax).toFixed(1);
-                tempP.textContent = `${minTemp} ... ${maxTemp} degrees °C`;
-                toggleCelsFahr.textContent = "Show ºF";
-            }
-        }
-        celsiusFahrenheitBtn.addEventListener("click", toggleCelsFahr);
+        const tempParaF = document.createElement("p");
+        tempParaF.className = "fahr hidden";
+        let minTempF = daysArray[i].tempmin;
+        let maxTempF = daysArray[i].tempmax;
+        tempParaF.textContent = `${minTempF} ... ${maxTempF} degrees °F`;
+        dayDiv.appendChild(tempParaF);
 
         const iconFromAPI = daysArray[i].icon;
         const emojiDiv = document.createElement("div");
@@ -116,8 +108,6 @@ function renderWeatherData(data) {
         emojiDiv.appendChild(weatherP);
         dayDiv.appendChild(emojiDiv);
 
-        
-
         forecastDiv.appendChild(dayDiv);
     }
 }
@@ -125,12 +115,43 @@ function renderWeatherData(data) {
 function clearPreviousLocation() {
     forecastDiv.textContent = "";
     cityHeading.textContent = "";
+
+    // resetting the button if new city was chosen
+    celsiusFahrenheitBtn.textContent = "Show °F";
+    celsiusFahrenheitBtn.style.backgroundColor = "#4CAF50";
 }
 
 function convertToCelsius(fahrenheit) {
     return ((fahrenheit - 32) *5 ) / 9;
 }
 
-function convertToFahrenheit(celsius) {
-    return (celsius * 9) / 5 +32;   
+function toggleCelsFahr() {
+    const allFehrenheitParas = document.querySelectorAll(".fahr");
+    const allCelsiusParas = document.querySelectorAll(".cels");
+    if (celsiusFahrenheitBtn.textContent === "Show °F") {
+        allFehrenheitParas.forEach(para => {
+            para.className = "fahr";
+        });
+
+        allCelsiusParas.forEach(para => {
+            para.className = "cels hidden";
+        })
+
+        celsiusFahrenheitBtn.textContent = "Show °C";
+        celsiusFahrenheitBtn.style.backgroundColor = "#ff7043";
+    } else {
+        allFehrenheitParas.forEach(para => {
+            para.className = "fahr hidden";
+        });
+
+        allCelsiusParas.forEach(para => {
+            para.className = "cels";
+        })
+
+        celsiusFahrenheitBtn.textContent = "Show °F";
+        celsiusFahrenheitBtn.style.backgroundColor = "#4CAF50";
+
+    }
 }
+
+celsiusFahrenheitBtn.addEventListener("click", toggleCelsFahr);
