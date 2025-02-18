@@ -11,6 +11,17 @@ async function getWeather() {
     try {
         const location = locationInput.value;
         const result = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=us&key=SS9Y6VJ23PJ46ZFSVAQ7ARBCF&contentType=json`);
+
+        if (!result.ok) {
+            if (result.status === 400) {
+                clearPreviousLocation();
+                forecastDiv.textContent = `No such place as "${location}" was found in the database. Please check your input.`;
+                throw new Error("Location not found. Please check your input.");
+            } else {
+                throw new Error(`Error: ${result.status} - ${result.statusText}`);
+            }
+        }
+
         const data = await result.json();
         console.log(data);
         renderWeatherData(data);
@@ -21,23 +32,30 @@ async function getWeather() {
 }
 
 searchBtn.addEventListener("click", getWeather)
+    
 function renderWeatherData(data) {
+    clearPreviousLocation();
+
     const weatherIcons = {
-        "clear-day": "☀️",
-        "clear-night": "🌙",
-        "rain": "🌧️",
-        "snow": "❄️",
-        "sleet": "🌨️",
-        "wind": "💨",
-        "fog": "🌫️",
-        "cloudy": "☁️",
-        "partly-cloudy-day": "⛅",
-        "partly-cloudy-night": "🌤️"
-      };
+            "clear-day": "☀️",
+            "clear-night": "🌙",
+            "rain": "🌧️",
+            "snow": "❄️",
+            "sleet": "🌨️",
+            "wind": "💨",
+            "fog": "🌫️",
+            "cloudy": "☁️",
+            "partly-cloudy-day": "⛅",
+            "partly-cloudy-night": "🌤️"
+    };
 
     const cityHeader = document.createElement("h2");
     cityHeader.textContent = data.resolvedAddress;
     cityHeading.appendChild(cityHeader);
+
+    const cityDescription = document.createElement("p");
+    cityDescription.textContent = `5 day weather forecast for ${locationInput.value}.`;
+    cityHeading.appendChild(cityDescription);
 
     const daysArray = data.days;
 
@@ -63,7 +81,12 @@ function renderWeatherData(data) {
         const weatherP = document.createElement("p");
         weatherP.textContent = daysArray[i].conditions;
         dayDiv.appendChild(weatherP);
-        
+
         forecastDiv.appendChild(dayDiv);
     }
+}
+
+function clearPreviousLocation() {
+    forecastDiv.textContent = "";
+    cityHeading.textContent = "";
 }

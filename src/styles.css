@@ -8,10 +8,15 @@ body {
     margin: 1rem 0.5rem;
 }
 
+header {
+
+}
+
 #forecast-div {
     display: flex;
     flex-wrap: wrap;
     gap: .5rem;
+    margin: 1rem 0;
 }
 
 .day-div {
@@ -28,6 +33,10 @@ body {
 .day-div p {
     margin-top: 1rem;
     margin-bottom: 2rem;
+}
+
+h1 {
+    margin: 1rem 0;
 }
 
 h2 {
