@@ -95,7 +95,7 @@ async function renderWeatherData(data) {
     const tempParaF = document.createElement("p");
     tempParaF.className = "fahr hidden";
     let tempF = data.currentConditions.temp
-    tempParaF.textContent = `Temperature: ${tempF} °F`;
+    tempParaF.textContent = `Temperature: ${tempF} °F (measured ${data.currentConditions.datetime})`;
     currentDayDiv.appendChild(tempParaF);
     const feelsLikeParaF = document.createElement("p");
     feelsLikeParaF.className = "fahr hidden";
