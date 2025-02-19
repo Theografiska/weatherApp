@@ -15,12 +15,12 @@ body {
 }
 
 main {
-    margin: 0rem 2rem;
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     min-height: 80vh;
+    gap: 8rem;
+    padding: 2rem;
 }
 
 header {
@@ -35,11 +35,16 @@ header {
     padding: 1rem 2rem;
 }
 
+img {
+    border-radius: .5rem;
+}
+
 #search-div {
     display: flex;
     gap: 10px;
     margin: 2rem;
     justify-content: center;
+    z-index: 10;
 }
 
 #location-input {
@@ -87,15 +92,15 @@ header {
 
 #forecast-div {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
     margin-top: 0rem;
     margin-bottom: 6rem;
 }
 
 .day-div {
-    width: 15rem;
-    height: 15rem;
+    width: 12.5rem;
+    height: 12.5rem;
     padding: 1rem;
     display: flex;
     cursor: pointer;
@@ -115,7 +120,9 @@ header {
 
 .current {
     width: 30rem;
-    height: 30rem;
+    height: 36rem;
+    justify-content: space-between;
+    padding: 2rem;
 }
 
 .day-div p {
@@ -128,7 +135,7 @@ header {
     color: #009688;
 }
 
-.day-div h3 {
+.day-div h4 {
     margin-top: .75rem;
     margin-bottom: .75rem;
     text-align: center;
@@ -155,7 +162,7 @@ button {
     background-color: #4CAF50;
     color: white;
     font-size: 16px;
-    border: none;
+    border: lightgray 1px solid;
     border-radius: 25px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -170,6 +177,21 @@ button {
     transform: scale(0.95);
 }
   
+.current-day-text {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: center;
+}
+
+#temp-cels, #temp-fahr {
+    font-size: 4rem;
+    grid-area: 1 / 1 / 5 / 2;
+}
+
+#emoji-div {
+    font-size: 1.5rem;
+}
 
 footer {
     position: fixed;
