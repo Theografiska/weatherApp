@@ -15,7 +15,6 @@ async function getWeather() {
         if (!result.ok) {
             if (result.status === 400) {
                 clearPreviousLocation();
-                celsiusFahrenheitBtn.className = "hidden";
                 cityHeading.textContent = `No such place as "${location}" was found in the database. Please check your input.`;
                 throw new Error("Location not found. Please check your input.");
             } else {
@@ -75,7 +74,7 @@ async function renderWeatherData(data) {
 
     const currentDayDiv = document.createElement("div");
     currentDayDiv.className = "day-div current";
-    currentDayDiv.style.backgroundColor = "#66a3d2";
+    currentDayDiv.style.background = "linear-gradient(135deg, #a4cded, #8cbad6)";
 
     const cityHeader = document.createElement("h3");
     cityHeader.textContent = `${locationInput.value} (${data.resolvedAddress})`;
