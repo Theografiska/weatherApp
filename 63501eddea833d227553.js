@@ -15,7 +15,6 @@ async function getWeather() {
         if (!result.ok) {
             if (result.status === 400) {
                 clearPreviousLocation();
-                celsiusFahrenheitBtn.className = "hidden";
                 cityHeading.textContent = `No such place as "${location}" was found in the database. Please check your input.`;
                 throw new Error("Location not found. Please check your input.");
             } else {
@@ -68,10 +67,6 @@ async function renderWeatherData(data) {
             "partly-cloudy-night": "🌤️"
     };
 
-    const cityHeader = document.createElement("h3");
-    cityHeader.textContent = `${locationInput.value} (${data.resolvedAddress})`;
-    cityHeading.appendChild(cityHeader);
-
     // current weather section
     const currentHeading = document.createElement("h2");
     currentHeading.textContent = "Current weather"
@@ -79,32 +74,57 @@ async function renderWeatherData(data) {
 
     const currentDayDiv = document.createElement("div");
     currentDayDiv.className = "day-div current";
+    currentDayDiv.style.background = "linear-gradient(135deg, #a4cded, #8cbad6)";
+
+    const cityHeader = document.createElement("h3");
+    cityHeader.textContent = `${locationInput.value} (${data.resolvedAddress})`;
+    currentDayDiv.appendChild(cityHeader);
+
+    const currentDayText = document.createElement("div");
+    currentDayText.className = "current-day-text";
+
     // temperature row for celsius
     const tempParaC = document.createElement("p");
+    tempParaC.id = "temp-cels";
     tempParaC.className = "cels";
-    let tempC = convertToCelsius(data.currentConditions.temp).toFixed(1);
-    tempParaC.textContent = `Temperature: ${tempC} °C (measured ${data.currentConditions.datetime})`;
-    currentDayDiv.appendChild(tempParaC);
+    tempParaC.textContent = `${convertToCelsius(data.currentConditions.temp)} °C`;
+    currentDayText.appendChild(tempParaC);
     const feelsLikeParaC = document.createElement("p");
     feelsLikeParaC.className = "cels";
-    let feelsLikeC = convertToCelsius(data.currentConditions.feelslike).toFixed(1);
-    feelsLikeParaC.textContent = `Feels like: ${feelsLikeC} °C`;
-    currentDayDiv.appendChild(feelsLikeParaC);
+    feelsLikeParaC.textContent = `Feels like: ${convertToCelsius(data.currentConditions.feelslike)} °C`;
+    currentDayText.appendChild(feelsLikeParaC);
 
     // temperature row for fahrenheit (hidden initially)
     const tempParaF = document.createElement("p");
+    tempParaF.id = "temp-fahr";
     tempParaF.className = "fahr hidden";
-    let tempF = data.currentConditions.temp
-    tempParaF.textContent = `Temperature: ${tempF} °F (measured ${data.currentConditions.datetime})`;
-    currentDayDiv.appendChild(tempParaF);
+    tempParaF.textContent = `${data.currentConditions.temp} °F`;
+    currentDayText.appendChild(tempParaF);
     const feelsLikeParaF = document.createElement("p");
     feelsLikeParaF.className = "fahr hidden";
     let feelsLikeF = data.currentConditions.feelslike;
     feelsLikeParaF.textContent = `Feels like: ${feelsLikeF} °F`;
-    currentDayDiv.appendChild(feelsLikeParaF);
+    currentDayText.appendChild(feelsLikeParaF);
+
+    const windspeedKph = document.createElement("p");
+    windspeedKph.className = "cels"   
+    windspeedKph.textContent = `Windspeed: ${convertToKmh(data.currentConditions.windspeed)} km/h`;
+    currentDayText.appendChild(windspeedKph); 
+
+    const windspeedMph = document.createElement("p");
+    windspeedMph.className = "fahr hidden"   
+    windspeedMph.textContent = `Windspeed: ${data.currentConditions.windspeed} mph`;
+    currentDayText.appendChild(windspeedMph); 
+
+    const humidity = document.createElement("p");
+    humidity.textContent = `Humidity: ${data.currentConditions.humidity}%`;
+    currentDayText.appendChild(humidity);
+
+    currentDayDiv.appendChild(currentDayText);
 
     const iconFromAPI = data.currentConditions.icon;
     const emojiDiv = document.createElement("div");
+    emojiDiv.id = "emoji-div";
     emojiDiv.textContent = weatherIcons[iconFromAPI] ? weatherIcons[iconFromAPI] : "❓"; 
     /* This checks if the iconFromAPI key exists in the weatherIcons object. 
     If it does, weatherIcons[iconFromAPI] will return an emoji (e.g., "⛅" for "partly-cloudy-day"). 
@@ -135,9 +155,9 @@ async function renderWeatherData(data) {
 
 
     // forecast section
-    const cityForecastHeader = document.createElement("h2");
-    cityForecastHeader.textContent = `5-day weather forecast`;
-    cityHeading.appendChild(cityForecastHeader);
+    const forecastHeader = document.createElement("h2");
+    forecastHeader.textContent = `5-day weather forecast`;
+    forecastDiv.appendChild(forecastHeader);
 
     const daysArray = data.days;
     for (let i = 0; i < 5; i++) {
@@ -146,7 +166,7 @@ async function renderWeatherData(data) {
         const dayDiv = document.createElement("div");
         dayDiv.className = "day-div";
 
-        const dateH3 = document.createElement("h3");
+        const dateH3 = document.createElement("h4");
         if (i === 0) {
             dateH3.textContent = `Today, ${formattedDate}`
         } else if (i === 1) {
@@ -159,8 +179,8 @@ async function renderWeatherData(data) {
         // temperature row for celsius
         const tempParaC = document.createElement("p");
         tempParaC.className = "cels";
-        let minTempC = convertToCelsius(daysArray[i].tempmin).toFixed(1);
-        let maxTempC = convertToCelsius(daysArray[i].tempmax).toFixed(1);
+        let minTempC = convertToCelsius(daysArray[i].tempmin);
+        let maxTempC = convertToCelsius(daysArray[i].tempmax);
         tempParaC.textContent = `${minTempC} ... ${maxTempC} °C`;
         dayDiv.appendChild(tempParaC);
 
@@ -199,7 +219,11 @@ function clearPreviousLocation() {
 }
 
 function convertToCelsius(fahrenheit) {
-    return ((fahrenheit - 32) *5 ) / 9;
+    return (((fahrenheit - 32) * 5 ) / 9).toFixed(1);
+}
+
+function convertToKmh(mph) {
+    return (mph * 1.60934).toFixed(1);
 }
 
 function toggleCelsFahr() {
@@ -228,4 +252,8 @@ function toggleCelsFahr() {
         celsiusFahrenheitBtn.textContent = "Show °F";
         celsiusFahrenheitBtn.style.backgroundColor = "#4CAF50";
     }
+}
+
+function changeBackground(data) {
+
 }
